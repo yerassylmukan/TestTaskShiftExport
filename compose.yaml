@@ -1,0 +1,11 @@
+﻿services:
+  webapplication1:
+    image: sleepysleepy8467/test:latest
+    build:
+      context: .
+      dockerfile: src/WebApplication1/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5000:80"
