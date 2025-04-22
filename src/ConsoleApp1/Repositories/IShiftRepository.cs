@@ -4,5 +4,5 @@ namespace ConsoleApp1.Repositories;
 
 public interface IShiftRepository
 {
-    IEnumerable<EmployeeShift> GetWorkDayShifts();
+    IEnumerable<EmployeeShiftModel> GetWorkDayShifts();
 }

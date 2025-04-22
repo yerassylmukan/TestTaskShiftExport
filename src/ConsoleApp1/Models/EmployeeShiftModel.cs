@@ -1,6 +1,7 @@
 ﻿namespace ConsoleApp1.Models;
 
-public class EmployeeShift
+// Моделька для хранения информации о сменах сотрудников
+public class EmployeeShiftModel
 {
     public string Department { get; set; }
     public string FirstName { get; set; }

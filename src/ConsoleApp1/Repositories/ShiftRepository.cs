@@ -2,8 +2,10 @@
 using ConsoleApp1.Models;
 using ConsoleApp1.Repositories;
 
+// Репозитория для получения данных с бд 
 public class ShiftRepository : IShiftRepository
 {
+    // Строка подключения к базе данных
     private readonly string _connectionString;
 
     public ShiftRepository(string dbPath)
@@ -14,15 +16,18 @@ public class ShiftRepository : IShiftRepository
         _connectionString = $"Data Source={dbPath};Version=3;";
     }
 
-    public IEnumerable<EmployeeShift> GetWorkDayShifts()
+    // Метод для получения смен сотрудников, работающих в рабочий день
+    public IEnumerable<EmployeeShiftModel> GetWorkDayShifts()
     {
-        var shifts = new List<EmployeeShift>();
+        var shifts = new List<EmployeeShiftModel>();
 
         try
         {
+            // Открытие соединения с базой данных
             using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
 
+            // SQL запрос для получения смен сотрудников
             var query = @"
                     SELECT 
                         e.department,
@@ -35,11 +40,12 @@ public class ShiftRepository : IShiftRepository
                     ORDER BY e.department, e.last_name;
                 ";
 
+            // Выполнение запроса и считывание данных
             using var command = new SQLiteCommand(query, connection);
             using var reader = command.ExecuteReader();
 
             while (reader.Read())
-                shifts.Add(new EmployeeShift
+                shifts.Add(new EmployeeShiftModel
                 {
                     Department = reader.GetString(0),
                     FirstName = reader.GetString(1),
@@ -61,6 +67,7 @@ public class ShiftRepository : IShiftRepository
         return shifts;
     }
 
+    // Метод для логирования ошибок
     private void LogError(Exception ex)
     {
         Console.WriteLine($"Error logged: {ex}");

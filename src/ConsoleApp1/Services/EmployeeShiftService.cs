@@ -3,6 +3,7 @@ using ConsoleApp1.Models;
 using ConsoleApp1.Repositories;
 using ConsoleApp1.Services;
 
+// Сервис класс (бизнес-логика) для обновления Excel файла
 public class EmployeeShiftService : IEmployeeShiftService
 {
     private readonly string _excelFilePath;
@@ -20,10 +21,12 @@ public class EmployeeShiftService : IEmployeeShiftService
         _shiftRepository = shiftRepository;
     }
 
+    // Метод для обновления Excel файла с данными о сменах
     public void UpdateExcelFile()
     {
         try
         {
+            // Получаем смены сотрудников для рабочих дней
             var shifts = _shiftRepository.GetWorkDayShifts();
 
             if (shifts == null || !shifts.Any())
@@ -32,6 +35,7 @@ public class EmployeeShiftService : IEmployeeShiftService
                 return;
             }
 
+            // Обновление Excel файла
             UpdateExcelWithShifts(shifts);
             Console.WriteLine("Excel file updated successfully.");
         }
@@ -42,7 +46,8 @@ public class EmployeeShiftService : IEmployeeShiftService
         }
     }
 
-    private void UpdateExcelWithShifts(IEnumerable<EmployeeShift> shifts)
+    // Метод для обновления Excel файла с полученными сменами
+    private void UpdateExcelWithShifts(IEnumerable<EmployeeShiftModel> shifts)
     {
         try
         {
@@ -80,6 +85,7 @@ public class EmployeeShiftService : IEmployeeShiftService
         }
     }
 
+    // Метод для логирования ошибок
     private void LogError(Exception ex)
     {
         Console.WriteLine($"Error logged: {ex}");
