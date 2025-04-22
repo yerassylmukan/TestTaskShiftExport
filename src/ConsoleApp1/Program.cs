@@ -40,8 +40,5 @@ public class Program
         {
             Console.WriteLine("Application error: " + ex.Message);
         }
-
-        Console.WriteLine("Press any key to exit...");
-        Console.ReadKey();
     }
 }
