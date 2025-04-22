@@ -10,14 +10,14 @@ public class Program
         Console.OutputEncoding = Encoding.UTF8;
         string dbPath;
         string excelPath;
-        
+
         // Определение путей к базе данных и Excel файлу в зависимости от конфигурации
 #if DEBUG // DEBUG означает, что приложение работает в режиме отладки
         var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        
+
         // Получение пути к корню решения, путем восхождения на несколько уровней вверх
         var solutionDir = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\.."));
-        
+
         dbPath = Path.Combine(solutionDir, "work_schedule.db");
         excelPath = Path.Combine(solutionDir, "excel.xlsx");
 #else // Выполняется эта часть, если приложение в релизной сборке

@@ -1,15 +1,26 @@
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using WebApplication1.Contracts;
 using WebApplication1.Models;
+using WebApplication1.Services;
+using WebApplication1.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers();
 
 var dbPath = Path.Combine(AppContext.BaseDirectory, "work_schedule.db");
 var connectionString = $"Data Source={dbPath};";
 
 builder.Services.AddDbContext<WorkScheduleContext>(options =>
     options.UseSqlite(connectionString));
+
+builder.Services.AddControllers()
+    .AddFluentValidation(fv => { fv.RegisterValidatorsFromAssemblyContaining<EmployeeDtoValidator>(); });
+
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
+builder.Services.AddScoped<IShiftService, ShiftService>();
+
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddEndpointsApiExplorer();
 
