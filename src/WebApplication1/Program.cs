@@ -28,6 +28,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.MapGet("/", () => "Hello World!");
+
 app.UseRouting();
 
 app.UseAuthorization();
