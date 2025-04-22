@@ -5,5 +5,5 @@ namespace WebApplication1.Contracts;
 
 public interface IReportService
 {
-    Task<Result<IEnumerable<EmployeeShiftReportDto>>> GetEmployeeShiftReport();
+    Task<Result<IEnumerable<EmployeeShiftReportDto>>> GetEmployeeShiftReport(DateOnly reportDate);
 }

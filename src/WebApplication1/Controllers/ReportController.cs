@@ -16,9 +16,9 @@ public class ReportController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetEmployeeShiftReport()
+    public async Task<IActionResult> GetEmployeeShiftReport(DateOnly reportDate)
     {
-        var result = await _reportService.GetEmployeeShiftReport();
+        var result = await _reportService.GetEmployeeShiftReport(reportDate);
         if (result.IsSuccess) return Ok(result.Data);
         return BadRequest(result.ErrorMessage);
     }

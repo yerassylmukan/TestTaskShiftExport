@@ -15,12 +15,12 @@ public class ReportService : IReportService
         _context = context;
     }
 
-    public async Task<Result<IEnumerable<EmployeeShiftReportDto>>> GetEmployeeShiftReport()
+    public async Task<Result<IEnumerable<EmployeeShiftReportDto>>> GetEmployeeShiftReport(DateOnly reportDate)
     {
         try
         {
             var reportData = await _context.Shifts
-                .Where(s => s.DayNote == "рабочий день")
+                .Where(s => s.DayNote == "рабочий день" && s.ShiftDate == reportDate)
                 .Include(s => s.Employee)
                 .OrderBy(s => s.Employee.Department)
                 .ThenBy(s => s.Employee.LastName)
@@ -33,15 +33,15 @@ public class ReportService : IReportService
                 })
                 .ToListAsync();
 
-            if (reportData == null || !reportData.Any())
-                return Result<IEnumerable<EmployeeShiftReportDto>>.FailureResult("Смены не найдены.");
+            if (!reportData.Any())
+                return Result<IEnumerable<EmployeeShiftReportDto>>.FailureResult("Смены не найдены на указанную дату.");
 
             return Result<IEnumerable<EmployeeShiftReportDto>>.SuccessResult(reportData);
         }
         catch (Exception ex)
         {
-            return Result<IEnumerable<EmployeeShiftReportDto>>.FailureResult("Ошибка при получении данных отчета: " +
-                                                                             ex.Message);
+            return Result<IEnumerable<EmployeeShiftReportDto>>.FailureResult("Ошибка при получении данных отчета: " + ex.Message);
         }
     }
+
 }
