@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using ConsoleApp1.Repositories;
+using ConsoleApp1.Services;
 
 public class Program
 {
@@ -7,12 +8,15 @@ public class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
         string dbPath;
+        string excelPath;
 #if DEBUG
-        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        string solutionDir = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\.."));
+        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+        var solutionDir = Path.GetFullPath(Path.Combine(baseDir, @"..\..\..\..\.."));
         dbPath = Path.Combine(solutionDir, "work_schedule.db");
+        excelPath = Path.Combine(solutionDir, "excel.xlsx");
 #else
         dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "work_schedule.db");
+        excelPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "excel.xlsx");
 #endif
         try
         {
@@ -22,22 +26,15 @@ public class Program
                 return;
             }
 
-            IShiftRepository shiftRepository = new ShiftRepository(dbPath);
-            var shifts = shiftRepository.GetWorkDayShifts();
-
-            if (shifts == null)
+            if (!File.Exists(excelPath))
             {
-                Console.WriteLine("No shift data retrieved.");
+                Console.WriteLine("Excel file not found at: " + excelPath);
                 return;
             }
 
-            Console.WriteLine("| Отдел        | Имя        | Фамилия    | Время работы     |");
-            Console.WriteLine("|--------------|------------|------------|------------------|");
-
-            foreach (var shift in shifts)
-            {
-                Console.WriteLine($"| {shift.Department,-12} | {shift.FirstName,-10} | {shift.LastName,-10} | {shift.ShiftRange,-16} |");
-            }
+            IShiftRepository shiftRepository = new ShiftRepository(dbPath);
+            IEmployeeShiftService employeeShiftService = new EmployeeShiftService(excelPath, shiftRepository);
+            employeeShiftService.UpdateExcelFile();
         }
         catch (Exception ex)
         {

@@ -23,7 +23,7 @@ public class ShiftRepository : IShiftRepository
             using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
 
-            string query = @"
+            var query = @"
                     SELECT 
                         e.department,
                         e.first_name,
@@ -39,7 +39,6 @@ public class ShiftRepository : IShiftRepository
             using var reader = command.ExecuteReader();
 
             while (reader.Read())
-            {
                 shifts.Add(new EmployeeShift
                 {
                     Department = reader.GetString(0),
@@ -47,17 +46,23 @@ public class ShiftRepository : IShiftRepository
                     LastName = reader.GetString(2),
                     ShiftRange = reader.GetString(3)
                 });
-            }
         }
         catch (SQLiteException ex)
         {
             Console.WriteLine("SQLite error: " + ex.Message);
+            LogError(ex);
         }
         catch (Exception ex)
         {
             Console.WriteLine("Unexpected error: " + ex.Message);
+            LogError(ex);
         }
 
         return shifts;
+    }
+
+    private void LogError(Exception ex)
+    {
+        Console.WriteLine($"Error logged: {ex}");
     }
 }
