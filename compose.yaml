@@ -9,3 +9,5 @@
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "5000:80"
+    volumes:
+      - ./work_schedule.db:/app/work_schedule.db
