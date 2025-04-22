@@ -1,0 +1,20 @@
+name: ci
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Logout Docker Hub
+      run: docker logout
+    - name: Login Docker Hub
+      run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+    - name: Docker compose build
+      run: docker compose build
+    - name: Push to Docker Hub
+      run: docker push sleepysleepy8467/test:latest
